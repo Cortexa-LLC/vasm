@@ -272,6 +272,10 @@ static expr *primary_expr(void)
         general_error(21,bytespertaddr*BITSPERBYTE); /* target data type overflow */
         break;
       }
+      /* Allow syntax modules to transform character constant values */
+#ifdef CHAR_CONST_TRANSFORM
+      c = CHAR_CONST_TRANSFORM(c, quote);
+#endif
       if(BIGENDIAN){
         val=(val<<8)+(unsigned char)c;
       }else if(LITTLEENDIAN){
@@ -391,7 +395,12 @@ static expr *inclusive_or_expr(void)
   expr *left,*new;
   left=exclusive_or_expr();
   EXPSKIP();
+#ifdef DOT_AS_BITOR
+  /* Merlin syntax: period (.) is bit-OR operator (e.g., RdGrp.Inc = RdGrp | Inc) */
+  while((*s=='|'&&s[1]!='|')||(*s=='!'&&s[1]!='=')||(*s=='.'&&ISIDSTART(s[1]))){
+#else
   while((*s=='|'&&s[1]!='|')||(*s=='!'&&s[1]!='=')){
+#endif
     s++;
     EXPSKIP();
     new=new_expr();

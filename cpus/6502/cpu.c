@@ -69,7 +69,7 @@ void print_cpu_opts(FILE *f,void *opts)
 }
 
 
-static int set_cpu_type(const char *n)
+int set_cpu_type(const char *n)
 {
   int bpt = 2;
 
@@ -129,11 +129,34 @@ int parse_operand(char *p,int len,operand *op,int required)
       case IMMEDX:
       case IMMED8:
       case IMMED16:
+#ifdef SYNTAX_SUPPORTS_SCASM_OPS
+        /* SCASM: '/' (high-byte) and '\' (low-byte) also indicate immediate mode */
+        if ((*p!='#' && *p!='/' && *p!='\\') || indir)
+          return PO_NOMATCH;
+        if (*p == '#')
+          p = skip(++p);
+        /* Note: '/' and '\' are NOT skipped here - they'll be processed below
+           as byte-selector prefixes that set OF_HI or OF_LO flags */
+#else
         if (*p!='#' || indir)
           return PO_NOMATCH;
         p = skip(++p);
+#endif
       case DATAOP:
-        pfx = 1;  /* immediate/data allows different selector prefixes */
+#ifdef SYNTAX_SUPPORTS_SCASM_OPS
+        /* SCASM: optional # prefix in data directives for 8-bit values */
+        if (*p == '#')
+          p = skip(++p);
+#endif
+      case ABS:
+      case ABSX:
+      case ABSY:
+      case ABSZ:
+      case LABS:
+      case LABSX:
+        if (indir)
+          return PO_NOMATCH;  /* absolute modes reject indirect operands */
+        pfx = 1;  /* immediate/data/absolute allows byte-selector prefixes */
         break;
       case INDIR:
       case INDIRX:
@@ -172,11 +195,19 @@ int parse_operand(char *p,int len,operand *op,int required)
       /* the expression. Their meaning is determined later in */
       /* eval_instruction() or eval_data() by the operand type, cpu */
       /* and accumular/index register width. */
-      if (pfx && *p==lo_c) {
+      if (pfx && *p==lo_c
+#ifdef SYNTAX_SUPPORTS_SCASM_OPS
+          || *p=='\\'  /* SCASM: accept '\' as low-byte operator */
+#endif
+         ) {
         p = skip(++p);
         op->flags |= OF_LO;  /* low-byte or 8-bit addressing */
       }
-      else if (pfx && *p==hi_c) {
+      else if (pfx && *p==hi_c
+#ifdef SYNTAX_SUPPORTS_SCASM_OPS
+               || *p=='/'  /* SCASM: accept '/' as high-byte operator */
+#endif
+              ) {
         p = skip(++p);
         op->flags |= OF_HI;  /* high-byte or 16/24-bit addressing */
       }
