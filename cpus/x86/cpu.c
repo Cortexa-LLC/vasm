@@ -67,7 +67,7 @@ static const int scale_factor_tab[4] = { 1, 2, 4, 8 };
 
 
 
-void cpu_opts(void *opts,section *sec)
+void cpu_opts(void *opts)
 /* set cpu options for following atoms */
 {
   mode_flag = ((cpuopts *)opts)->mode;

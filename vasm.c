@@ -289,7 +289,7 @@ static int resolve_section(section *sec)
         cur_src->line=p->line;
 #if HAVE_CPU_OPTS
       if(p->type==OPTS){
-        cpu_opts(p->content.opts,sec);
+        cpu_opts(p->content.opts);
       }
       else
 #endif
@@ -492,7 +492,7 @@ static void assemble(void)
         roffs_to_space(sec,p);
 #if HAVE_CPU_OPTS
       else if(p->type==OPTS)
-        cpu_opts(p->content.opts,sec);
+        cpu_opts(p->content.opts);
 #endif
       else if(p->type==PRINTTEXT&&!nostdout)
         printf("%s",p->content.ptext);

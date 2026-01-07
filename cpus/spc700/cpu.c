@@ -31,7 +31,7 @@ struct ExtraDirectives {
 static hashtable *cpudirhash;
 
 
-void cpu_opts(void *opts,section *sec)
+void cpu_opts(void *opts)
 /* set cpu options for following atoms */
 {
   dpage = ((cpuopts *)opts)->dpage;

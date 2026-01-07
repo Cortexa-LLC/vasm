@@ -1,5 +1,5 @@
 /* syntax.c  syntax module for vasm */
-/* (c) in 2002-2024 by Volker Barthelmann and Frank Wille */
+/* (c) in 2002-2026 by Volker Barthelmann and Frank Wille */
 
 #include "vasm.h"
 #include "stabs.h"
@@ -13,7 +13,7 @@
    be provided by the main module.
 */
 
-const char *syntax_copyright="vasm std syntax module 5.6a (c) 2002-2024 Volker Barthelmann";
+const char *syntax_copyright="vasm std syntax module 5.6b (c) 2002-2026 Volker Barthelmann";
 hashtable *dirhash;
 int dotdirs = 1;
 
@@ -412,6 +412,48 @@ static void handle_weak(char *s)
 static void handle_local(char *s)
 {
   do_binding(s,LOCAL);
+}
+
+static void do_visibility(char *s,int vis)
+{
+  static const char *vis_name[] = {
+    "default","internal","hidden","protected",
+    "exported","singleton","eliminate",""
+  };
+  symbol *sym;
+  strbuf *name;
+
+  while(1){
+    if(!(name=parse_identifier(0,&s))){
+      syntax_error(10);  /* identifier expected */
+      return;
+    }
+    sym=new_import(name->str);
+    if(ELF_VIS(sym)!=0&&ELF_VIS(sym)!=vis)
+      syntax_error(15,sym->name,vis_name[ELF_VIS(sym)]);  /* vis. already set */
+    else
+      sym->flags|=(vis&7)<<SH_RSRVD_S;
+    s=skip(s);
+    if(*s!=',')
+      break;
+    s=skip(s+1);
+  }
+  eol(s);
+}
+
+static void handle_internal(char *s)
+{
+  do_visibility(s,1);  /* visibility STV_INTERNAL=1 */
+}
+
+static void handle_hidden(char *s)
+{
+  do_visibility(s,2);  /* visibility STV_HIDDEN=2 */
+}
+
+static void handle_protected(char *s)
+{
+  do_visibility(s,3);  /* visibility STV_PROTECTED=3 */
 }
 
 static void do_align(taddr align,size_t width,expr *fill,taddr max)
@@ -1144,6 +1186,9 @@ struct {
   "nolist",handle_nolist,
   "swbeg",handle_swbeg,
   "vdebug",handle_vdebug,
+  "internal",handle_internal,
+  "hidden",handle_hidden,
+  "protected",handle_protected,
 };
 
 int dir_cnt=sizeof(directives)/sizeof(directives[0]);

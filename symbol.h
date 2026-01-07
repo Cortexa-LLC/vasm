@@ -35,9 +35,14 @@
 #define XDEF (1<<16)        /* must not remain at IMPORT-type */
 #define XREF (1<<17)        /* must stay IMPORT-type */
 #define SYMINDIR (1<<18)    /* expression with symbol indirection */
-#define RSRVD_C (1L<<20)    /* bits 20..23 are reserved for cpu modules */
-#define RSRVD_S (1L<<24)    /* bits 24..27 are reserved for syntax modules */
-#define RSRVD_O (1L<<28)    /* bits 28..31 are reserved for output modules */
+
+/* reserved flags for modules */
+#define SH_RSRVD_C 20       /* bits 20..23 are reserved for cpu modules */
+#define SH_RSRVD_S 24       /* bits 24..27 are reserved for syntax modules */
+#define SH_RSRVD_O 28       /* bits 28..31 are reserved for output modules */
+#define RSRVD_C (1L<<SH_RSRVD_C)
+#define RSRVD_S (1L<<SH_RSRVD_S)
+#define RSRVD_O (1L<<SH_RSRVD_O)
 
 struct symbol {
   struct symbol *next;

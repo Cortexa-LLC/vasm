@@ -62,9 +62,11 @@ operand *new_operand(void)
 }
 
 
-void cpu_opts(void *opts,section *sec)
+void cpu_opts(void *opts)
 /* set cpu options for the following atoms */
 {
+  section *sec = ((cpuopts *)opts)->this_sec;
+
   cpu_type = ((cpuopts *)opts)->cpu;
   arm_be_mode = ((cpuopts *)opts)->endian;
   thumb_mode = ((cpuopts *)opts)->thumb;
@@ -91,6 +93,7 @@ void cpu_opts_init(section *s)
   if (s) {
     cpuopts *new = mymalloc(sizeof(cpuopts));
 
+    new->this_sec = s;
     new->cpu = cpu_type;
     new->endian = arm_be_mode;
     new->thumb = thumb_mode;

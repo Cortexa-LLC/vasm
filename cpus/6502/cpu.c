@@ -39,7 +39,7 @@ struct ExtraDirectives {
 static hashtable *cpudirhash;
 
 
-void cpu_opts(void *opts,section *sec)
+void cpu_opts(void *opts)
 /* set cpu options for following atoms */
 {
   dpage = ((cpuopts *)opts)->dpage;
@@ -922,7 +922,7 @@ dblock *eval_instruction(instruction *ip,section *sec,taddr pc)
           case INDIRX:
           case LINDIR:
           case REL16:
-	  case IMMED16:
+          case IMMED16:
             d = setval(0,d,2,val);
             break;
           case LABS:
@@ -931,9 +931,9 @@ dblock *eval_instruction(instruction *ip,section *sec,taddr pc)
             break;
           case QDPIND:
           case QDPINDZ:
-	    *d = d[-1];
-	    d[-1] = 0xea;  /* MEGA65 32-bit indirect prefix */
-	    d++;
+            *d = d[-1];
+            d[-1] = 0xea;  /* MEGA65 32-bit indirect prefix */
+            d++;
           case DPAGE:
           case DPAGEX:
           case DPAGEY:

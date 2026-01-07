@@ -378,7 +378,7 @@ static void check_apollo_conflicts(void)
 }
 
 
-void cpu_opts(void *opts,section *sec)
+void cpu_opts(void *opts)
 /* set cpu options for following atoms */
 {
   int cmd = ((optcmd *)opts)->cmd;
@@ -469,7 +469,7 @@ static void add_cpu_opt(section *s,int cmd,int arg)
     new->cmd = cmd;
     new->arg = arg;
     add_atom(s,new_opts_atom(new));
-    cpu_opts(new,s);
+    cpu_opts(new);
   }
   else {
     /* no section known at this point, so set the option immediately: it will
@@ -478,7 +478,7 @@ static void add_cpu_opt(section *s,int cmd,int arg)
 
     o.cmd = cmd;
     o.arg = arg;
-    cpu_opts(&o,s);
+    cpu_opts(&o);
   }
 }
 
