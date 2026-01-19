@@ -330,7 +330,7 @@ static int parse_reg(char **pp)
     p++;
     while (ISIDCHAR(*p))
       p++;
-    if (sym = find_regsym_nc(name,p-name)) {
+    if (sym = find_regsym(name,p-name)) {
       *pp = p;
       return sym->reg_num;
     }
@@ -355,7 +355,7 @@ static int parse_reglist(char **pp)
         name = p++;
         while (ISIDCHAR(*p))
           p++;
-        if (sym = find_regsym_nc(name,p-name)) {
+        if (sym = find_regsym(name,p-name)) {
           r = sym->reg_num;
           if (lastreg >= 0) {  /* range-mode? */
             if (lastreg < r) {
@@ -2008,30 +2008,30 @@ int init_cpu(void)
   /* define register symbols */
   for (i=0; i<16; i++) {
     sprintf(r,"r%d",i);
-    new_regsym(0,1,r,0,0,i);
+    new_regsym(0,r,0,0,i);
     sprintf(r,"c%d",i);
-    new_regsym(0,1,r,0,0,i);
+    new_regsym(0,r,0,0,i);
     sprintf(r,"p%d",i);
-    new_regsym(0,1,r,0,0,i);
+    new_regsym(0,r,0,0,i);
   }
   /* ATPCS synonyms */
   for (i=0; i<8; i++) {
     if (i < 4) {
       sprintf(r,"a%d",i+1);
-      new_regsym(0,1,r,0,0,i);
+      new_regsym(0,r,0,0,i);
     }
     sprintf(r,"v%d",i+1);
-    new_regsym(0,1,r,0,0,i+4);
+    new_regsym(0,r,0,0,i+4);
   }
   /* well known aliases */
-  new_regsym(0,1,"wr",0,0,7);
-  new_regsym(0,1,"sb",0,0,9);
-  new_regsym(0,1,"sl",0,0,10);
-  new_regsym(0,1,"fp",0,0,11);
-  new_regsym(0,1,"ip",0,0,12);
-  new_regsym(0,1,"sp",0,0,13);
-  new_regsym(0,1,"lr",0,0,14);
-  new_regsym(0,1,"pc",0,0,15);
+  new_regsym(0,"wr",0,0,7);
+  new_regsym(0,"sb",0,0,9);
+  new_regsym(0,"sl",0,0,10);
+  new_regsym(0,"fp",0,0,11);
+  new_regsym(0,"ip",0,0,12);
+  new_regsym(0,"sp",0,0,13);
+  new_regsym(0,"lr",0,0,14);
+  new_regsym(0,"pc",0,0,15);
 
   /* instruction alignment, determined by thumb-mode */
   if (inst_alignment > 1)

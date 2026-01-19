@@ -98,11 +98,10 @@ symbol *internal_abs(const char *);
 expr *set_internal_abs(const char *,taddr);
 
 #ifdef HAVE_REGSYMS
-void add_regsym(regsym *,int);
+void add_regsym(regsym *);
 regsym *find_regsym(const char *,int);
-regsym *find_regsym_nc(const char *,int);
-regsym *new_regsym(int,int,const char *,int,unsigned int,unsigned int);
-int undef_regsym(const char *,int,int);
+regsym *new_regsym(int,const char *,int,unsigned int,unsigned int);
+int undef_regsym(const char *,int);
 #endif /* HAVE_REGSYMS */
 
 int init_symbol(void);

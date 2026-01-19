@@ -37,7 +37,7 @@ static unsigned addString(struct StrTabList *sl,const char *s)
 
 static void init_lists(void)
 {
-  elfsymhash = new_hashtable(ELFSYMHTABSIZE);
+  elfsymhash = new_hashtable_c(ELFSYMHTABSIZE);
   initlist(&shdrlist);
   initlist(&symlist);
   initlist(&relalist);
@@ -89,7 +89,7 @@ static struct Symbol32Node *addSymbol32(const char *name)
   }
   data.ptr = sn;
   sn->idx = symindex++;
-  add_hashentry(elfsymhash,name?name:emptystr,data,0);
+  add_hashentry(elfsymhash,name?name:emptystr,data);
   return sn;
 }
 
@@ -106,7 +106,7 @@ static struct Symbol64Node *addSymbol64(const char *name)
   }
   data.ptr = sn;
   sn->idx = symindex++;
-  add_hashentry(elfsymhash,name?name:emptystr,data,0);
+  add_hashentry(elfsymhash,name?name:emptystr,data);
   return sn;
 }
 

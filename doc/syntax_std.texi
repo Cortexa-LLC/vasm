@@ -108,13 +108,13 @@ See @code{.string}.
       third argument defines a maximum number of padding bytes to use. When
       more are needed then the alignment is not done at all.
 
-@item .balignl <bit_count>[,<fill>][,<maxpad>]
+@item .balignl <byte_count>[,<fill>][,<maxpad>]
       Works like @code{.balign}, with the only difference that the optional
       fill value can be specified as a 32-bit word. Padding locations which
       are not already 32-bit aligned, will cause a warning and padded by
       zero-bytes.
 
-@item .balignw <bit_count>[,<fill>][,<maxpad>]
+@item .balignw <byte_count>[,<fill>][,<maxpad>]
       Works like @code{.balign}, with the only difference that the optional
       fill value can be specified as a 16-bit word. Padding locations which
       are not already 16-bit aligned, will cause a warning and padded by
